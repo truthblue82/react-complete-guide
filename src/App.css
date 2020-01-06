@@ -1,6 +1,11 @@
 .App {
   text-align: center;
 }
-button {
-  
+
+.red {
+  color: red;
+}
+
+.bold {
+  font-weight: bold;
 }
