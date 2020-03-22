@@ -5,6 +5,8 @@ import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/WithClass';
+import Aux from '../hoc/Aux';
 
 class App extends Component {
   constructor(props) {
@@ -20,7 +22,8 @@ class App extends Component {
     ],
     otherState: 'some other value',
     showPersons: false,
-    showCockpit: true
+    showCockpit: true,
+    changeCounter: 0
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -59,19 +62,24 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    this.setState({persons: persons});
-  }
+    this.setState((prevState, props) => {
+      return {
+        persons: persons,
+        changeCounter: prevState.changeCounter + 1
+      };
+    });
+  };
 
   deletePersonHandler = (personIndex) => {
     let persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
-  }
+  };
 
   togglePersonsHandler = () => {
     let doesShow = this.state.showPersons;
     this.setState({showPersons: !doesShow});
-  }
+  };
 
   render () {
     console.log('[App.js] render');
@@ -86,7 +94,7 @@ class App extends Component {
     }
 
     return (
-        <div className={classes.App}>
+        <Aux>
           <button onClick={() => {
             this.setState({showCockpit: false});
           }}>
@@ -99,9 +107,9 @@ class App extends Component {
             personsLength={this.state.persons.length}
             clicked={this.togglePersonsHandler} /> : null }
           {persons}
-        </div>
+        </Aux>
     );
   }
 }
 
-export default App;
+export default withClass(App, classes.App);
